@@ -6,7 +6,7 @@ use convert_case::{Case, Casing};
 pub struct Camera {
     name: String,
     url: String,
-    refresh_rate: Option<usize>,
+    pub refresh_rate: Option<usize>,
 }
 
 impl Camera {

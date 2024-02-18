@@ -25,7 +25,11 @@ fn main() {
     let cameras = parser::read_config_file(config_file).unwrap();
     // Choose a camera at random
     let camera = cameras.choose(&mut rand::thread_rng()).unwrap();
-    camera.set_as_wallpaper();
-
-    println!("Cameras: {:?}", cameras);
+    loop {
+        println!("Setting wallpaper with {}", camera);
+        camera.set_as_wallpaper();
+        let sleep_time = 1000 / camera.refresh_rate.unwrap_or(24);
+        println!("Sleeping for {}ms", sleep_time);
+        std::thread::sleep(std::time::Duration::from_millis(sleep_time as u64));
+    }
 }
