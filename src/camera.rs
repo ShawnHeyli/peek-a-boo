@@ -1,5 +1,5 @@
 use std::fmt::Display;
-
+use reqwest::get;
 use convert_case::{Case, Casing};
 
 #[derive(Debug)]
@@ -18,15 +18,15 @@ impl Camera {
         }
     }
 
-    fn get_image(&self) {
-        let img_bytes = reqwest::blocking::get(&self.url).unwrap().bytes().unwrap();
+    async fn get_image(&self) {
+        let img_bytes = get(&self.url).await.unwrap().bytes().await.unwrap();
         let image = image::load_from_memory(&img_bytes).unwrap();
         image.resize_to_fill(1920, 1080, image::imageops::FilterType::Lanczos3);
         image.save(format!("{}.jpg", &self.name)).unwrap();
     }
 
-    pub fn set_as_wallpaper(&self) {
-        self.get_image();
+    pub async fn set_as_wallpaper(&self) {
+        self.get_image().await;
         let output = std::process::Command::new("swww")
             .arg("img")
             .args(["--transition-fps", "60"])
